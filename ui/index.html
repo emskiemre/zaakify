@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BitQlon Control</title>
+  <title>Zaakify - Backoffice Co-Pilot</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -16,7 +16,6 @@
       --accent: #6366f1;
       --accent-dim: #4f46e5;
       --success: #22c55e;
-      --warning: #f59e0b;
       --error: #ef4444;
       --font: 'Inter', -apple-system, system-ui, sans-serif;
       --mono: 'JetBrains Mono', 'Fira Code', monospace;
@@ -27,65 +26,34 @@
       color: var(--text);
       height: 100vh;
       display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
-    /* ─── Sidebar ─── */
-    .sidebar {
-      width: 260px;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
+    /* ─── Header ─── */
+    .header {
+      height: 64px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border);
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
       flex-shrink: 0;
     }
-    .sidebar-header {
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-    }
-    .sidebar-header h1 {
+    .header h1 {
       font-size: 20px;
       font-weight: 700;
       background: linear-gradient(135deg, var(--accent), #a78bfa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .sidebar-header .version {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 2px;
-    }
-    .nav { flex: 1; padding: 12px; }
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      color: var(--text-dim);
-      font-size: 14px;
-      transition: all 0.15s;
-    }
-    .nav-item:hover { background: var(--surface2); color: var(--text); }
-    .nav-item.active { background: var(--accent-dim); color: white; }
-    .nav-item .dot {
-      width: 8px; height: 8px;
+    .status-dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: var(--success);
     }
-    .nav-item .dot.off { background: var(--text-dim); }
-
-    /* ─── Main ─── */
-    .main { flex: 1; display: flex; flex-direction: column; }
-    .topbar {
-      height: 56px;
-      padding: 0 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .topbar h2 { font-size: 16px; font-weight: 600; }
+    .status-dot.offline { background: var(--error); }
 
     /* ─── Chat ─── */
     .chat-container {
@@ -93,6 +61,9 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
     }
     .messages {
       flex: 1;
@@ -104,7 +75,7 @@
     }
     .message {
       max-width: 720px;
-      padding: 12px 16px;
+      padding: 14px 18px;
       border-radius: 12px;
       font-size: 14px;
       line-height: 1.6;
@@ -120,11 +91,6 @@
       background: var(--surface2);
       border-bottom-left-radius: 4px;
     }
-    .message .meta {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 6px;
-    }
 
     /* ─── Markdown in messages ─── */
     .message strong { font-weight: 700; }
@@ -132,7 +98,7 @@
     .message code {
       font-family: var(--mono);
       background: rgba(255,255,255,0.06);
-      padding: 1px 5px;
+      padding: 2px 6px;
       border-radius: 4px;
       font-size: 13px;
     }
@@ -213,17 +179,18 @@
 
     /* ─── Input ─── */
     .input-area {
-      padding: 16px 24px;
+      padding: 20px 24px;
       border-top: 1px solid var(--border);
       display: flex;
       gap: 12px;
+      flex-shrink: 0;
     }
     .input-area input {
       flex: 1;
       background: var(--surface2);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 16px;
+      border-radius: 12px;
+      padding: 14px 18px;
       color: var(--text);
       font-size: 14px;
       font-family: var(--font);
@@ -236,132 +203,32 @@
       background: var(--accent);
       border: none;
       color: white;
-      padding: 12px 24px;
-      border-radius: 10px;
+      padding: 14px 28px;
+      border-radius: 12px;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
     }
     .input-area button:hover { background: var(--accent-dim); }
-
-    /* ─── Status Panel ─── */
-    .status-panel {
-      padding: 24px;
-      overflow-y: auto;
-      flex: 1;
-    }
-    .status-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-    .status-card h3 {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-dim);
-      margin-bottom: 12px;
-    }
-    .status-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      font-size: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-    .status-row:last-child { border-bottom: none; }
-    .badge {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 100px;
-      font-weight: 600;
-    }
-    .badge.green { background: #22c55e22; color: var(--success); }
-    .badge.yellow { background: #f59e0b22; color: var(--warning); }
-    .badge.red { background: #ef444422; color: var(--error); }
+    .input-area button:active { transform: scale(0.98); }
   </style>
 </head>
 <body>
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <h1>BitQlon</h1>
-      <div class="version">v1.0.0</div>
-    </div>
-    <div class="nav">
-      <div class="nav-item active" onclick="showPanel('chat')">
-        <span>Chat</span>
-      </div>
-      <div class="nav-item" onclick="showPanel('status')">
-        <span>Status</span>
-      </div>
-      <div class="nav-item" onclick="showPanel('channels')">
-        <span>Channels</span>
-      </div>
-      <div class="nav-item" onclick="showPanel('sessions')">
-        <span>Sessions</span>
-      </div>
-      <div class="nav-item" onclick="showPanel('memory')">
-        <span>Memory</span>
-      </div>
-    </div>
+  <div class="header">
+    <h1>Zaakify</h1>
+    <div class="status-dot" id="ws-dot"></div>
   </div>
 
-  <div class="main">
-    <div class="topbar">
-      <h2 id="panel-title">Chat</h2>
-      <div id="connection-status">
-        <span class="dot" id="ws-dot"></span>
+  <div class="chat-container">
+    <div class="messages" id="messages">
+      <div class="message assistant">
+        Welkom bij Zaakify, je backoffice co-pilot. Stel een vraag of geef me een taak om mee te beginnen.
       </div>
     </div>
-
-    <!-- Chat Panel -->
-    <div id="panel-chat" class="chat-container">
-      <div class="messages" id="messages">
-        <div class="message assistant">
-          Welcome to BitQlon. Type a message to start chatting with your AI assistant.
-        </div>
-      </div>
-      <div class="input-area">
-        <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off" />
-        <button id="send-btn" onclick="sendMessage()">Send</button>
-      </div>
-    </div>
-
-    <!-- Status Panel -->
-    <div id="panel-status" class="status-panel" style="display:none">
-      <div class="status-card">
-        <h3>System</h3>
-        <div class="status-row">
-          <span>Status</span>
-          <span class="badge green" id="sys-status">Healthy</span>
-        </div>
-        <div class="status-row">
-          <span>Uptime</span>
-          <span id="sys-uptime">--</span>
-        </div>
-        <div class="status-row">
-          <span>Memory</span>
-          <span id="sys-memory">--</span>
-        </div>
-      </div>
-      <div class="status-card">
-        <h3>Channels</h3>
-        <div id="channel-status">Loading...</div>
-      </div>
-    </div>
-
-    <!-- Other Panels (placeholder) -->
-    <div id="panel-channels" class="status-panel" style="display:none">
-      <div class="status-card"><h3>Channel Configuration</h3><p style="color:var(--text-dim);font-size:14px">Manage your connected channels from here.</p></div>
-    </div>
-    <div id="panel-sessions" class="status-panel" style="display:none">
-      <div class="status-card"><h3>Active Sessions</h3><p style="color:var(--text-dim);font-size:14px">View and manage active chat sessions.</p></div>
-    </div>
-    <div id="panel-memory" class="status-panel" style="display:none">
-      <div class="status-card"><h3>Memory Store</h3><p style="color:var(--text-dim);font-size:14px">Search and manage long-term memory entries.</p></div>
+    <div class="input-area">
+      <input type="text" id="msg-input" placeholder="Typ een bericht..." autocomplete="off" />
+      <button id="send-btn" onclick="sendMessage()">Verstuur</button>
     </div>
   </div>
 
@@ -376,7 +243,7 @@
 
       ws.onopen = () => {
         console.log('WebSocket connected');
-        document.getElementById('ws-dot').style.background = 'var(--success)';
+        document.getElementById('ws-dot').classList.remove('offline');
       };
 
       ws.onmessage = (event) => {
@@ -385,26 +252,25 @@
       };
 
       ws.onclose = () => {
-        document.getElementById('ws-dot').style.background = 'var(--error)';
+        document.getElementById('ws-dot').classList.add('offline');
         setTimeout(connect, 3000);
       };
     }
 
     // ─── Streaming State ────────────────────────────────────────
-    let busy = false;           // True while waiting for agent (for UI indicator only)
-    let streamEl = null;        // The DOM element currently being streamed into
-    let streamText = '';        // Raw text accumulated during streaming
-    let streamedBubble = null;  // The finalized bubble from the last stream (to skip duplicate 'message')
-    let queueDepth = 0;         // Number of messages waiting in queue
+    let busy = false;
+    let streamEl = null;
+    let streamText = '';
+    let streamedBubble = null;
+    let queueDepth = 0;
 
     function handleWsMessage(data) {
       if (data.type === 'connected') {
         authenticated = data.authenticated;
-        document.getElementById('ws-dot').style.background = 'var(--success)';
+        document.getElementById('ws-dot').classList.remove('offline');
         return;
       }
 
-      // ─── Stream start: create a new bubble with cursor ──────
       if (data.type === 'stream_start') {
         removeThinking();
         streamText = '';
@@ -413,86 +279,65 @@
         return;
       }
 
-      // ─── Stream delta: append token to the bubble ───────────
       if (data.type === 'stream_delta' && data.data) {
         streamText += data.data.content;
         if (streamEl) {
-          // Render raw text + cursor while streaming
           streamEl.innerHTML = md(streamText) + '<span class="cursor"></span>';
           scrollToBottom();
         }
         return;
       }
 
-      // ─── Stream end: finalize the bubble ────────────────────
       if (data.type === 'stream_end') {
         if (streamEl && streamText) {
-          // Final markdown render without cursor
           streamEl.classList.remove('streaming');
           streamEl.innerHTML = md(streamText);
-          streamedBubble = streamEl; // Remember — so 'message' won't duplicate
+          streamedBubble = streamEl;
         }
         streamEl = null;
         streamText = '';
-        // Don't unlock input yet — there might be tool calls followed by
-        // another stream_start or a final 'message'. We unlock on 'message'.
         return;
       }
 
-      // ─── Intermediate message (agent says something before tools) ─
       if (data.type === 'intermediate' && data.data) {
         removeThinking();
-
         if (streamEl && streamText) {
-          // Still streaming — finalize the stream bubble
           streamEl.classList.remove('streaming');
           streamEl.innerHTML = md(streamText);
           streamEl = null;
           streamText = '';
         } else if (streamedBubble) {
-          // Already rendered via streaming — update in place
           streamedBubble.innerHTML = md(data.data.content);
         } else {
-          // No streaming — add new bubble
           addMessage('assistant', data.data.content);
         }
         streamedBubble = null;
-        // Do NOT unlock input — agent is still working (tools running next)
         return;
       }
 
-      // ─── Final message (complete response, unlocks input) ───
       if (data.type === 'message' && data.data) {
         removeThinking();
-
         if (streamEl) {
-          // Still streaming — finalize with the final text
           streamEl.classList.remove('streaming');
           streamEl.innerHTML = md(data.data.content);
           streamEl = null;
           streamText = '';
         } else if (streamedBubble) {
-          // Already rendered via streaming — just update content (don't add new bubble)
           streamedBubble.innerHTML = md(data.data.content);
         } else {
-          // No streaming happened (e.g. non-streaming fallback) — add new bubble
           addMessage('assistant', data.data.content);
         }
-
         streamedBubble = null;
-        // Mark as not busy (for UI indicator)
         setBusy(false);
         return;
       }
 
-      // ─── Message queued (user sent while agent busy) ───────
       if (data.type === 'queued' && data.data) {
         queueDepth = parseInt(data.data.content, 10) || 0;
         updateQueueIndicator();
         return;
       }
 
-      // ─── Request aborted by user ───────────────────────────
       if (data.type === 'aborted') {
         removeThinking();
         if (streamEl) {
@@ -526,13 +371,9 @@
 
     function setBusy(state) {
       busy = state;
-      // Input is NEVER disabled - users can always send messages (they queue on backend)
-      // Only update visual indicator
       const btn = document.getElementById('send-btn');
-      if (state) {
-        btn.textContent = 'Send';  // Still say "Send" even when busy
-      } else {
-        btn.textContent = 'Send';
+      if (!state) {
+        btn.textContent = 'Verstuur';
         queueDepth = 0;
         updateQueueIndicator();
       }
@@ -542,9 +383,9 @@
     function updateQueueIndicator() {
       const btn = document.getElementById('send-btn');
       if (queueDepth > 0) {
-        btn.textContent = `Send (${queueDepth} queued)`;
+        btn.textContent = `Verstuur (${queueDepth} in wachtrij)`;
       } else {
-        btn.textContent = 'Send';
+        btn.textContent = 'Verstuur';
       }
     }
 
@@ -564,13 +405,11 @@
       const text = input.value.trim();
       if (!text) return;
 
-      // Check if it's a stop command
       if (isStopCommand(text)) {
         input.value = '';
         if (ws && ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify({ type: 'chat', content: text }));
         }
-        // Don't show user message bubble or thinking indicator for stop
         return;
       }
 
@@ -580,10 +419,8 @@
       if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ type: 'chat', content: text }));
 
-        // If not already busy, show thinking indicator
         if (!busy) {
           setBusy(true);
-          // Show thinking indicator (replaced by stream_start when tokens arrive)
           const container = document.getElementById('messages');
           const div = document.createElement('div');
           div.className = 'message assistant';
@@ -593,64 +430,47 @@
           container.appendChild(div);
           scrollToBottom();
         }
-        // If already busy, message will be queued on backend
-        // The 'queued' event will update the UI
       }
     }
 
     /**
-     * Lightweight markdown to HTML — no dependencies.
-     * Handles: code blocks, inline code, bold, italic, links, lists, blockquotes, hr, paragraphs.
+     * Lightweight markdown to HTML
      */
     function md(src) {
-      // Escape HTML first to prevent XSS
       let h = src
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 
-      // Fenced code blocks: ```lang\n...\n```
       h = h.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) =>
         `<pre><code class="lang-${lang}">${code.trimEnd()}</code></pre>`
       );
 
-      // Inline code: `...`
       h = h.replace(/`([^`\n]+)`/g, '<code>$1</code>');
 
-      // Bold + italic: ***text*** or ___text___
       h = h.replace(/\*{3}(.+?)\*{3}/g, '<strong><em>$1</em></strong>');
-      // Bold: **text** or __text__
       h = h.replace(/\*{2}(.+?)\*{2}/g, '<strong>$1</strong>');
       h = h.replace(/_{2}(.+?)_{2}/g, '<strong>$1</strong>');
-      // Italic: *text* or _text_ (but not inside URLs or words)
       h = h.replace(/\*(.+?)\*/g, '<em>$1</em>');
       h = h.replace(/(?<!\w)_(.+?)_(?!\w)/g, '<em>$1</em>');
 
-
-      // Links: [text](url)
       h = h.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 
-      // Horizontal rule
       h = h.replace(/^---+$/gm, '<hr>');
 
-      // Blockquotes (consecutive lines starting with >)
       h = h.replace(/^(?:&gt;|>) (.+)$/gm, '<blockquote>$1</blockquote>');
-      // Merge adjacent blockquotes
       h = h.replace(/<\/blockquote>\n<blockquote>/g, '\n');
 
-      // Unordered lists
       h = h.replace(/(?:^|\n)((?:[-*] .+\n?)+)/g, (_, block) => {
         const items = block.trim().split('\n').map(l => `<li>${l.replace(/^[-*] /, '')}</li>`).join('');
         return `\n<ul>${items}</ul>\n`;
       });
 
-      // Ordered lists
       h = h.replace(/(?:^|\n)((?:\d+\. .+\n?)+)/g, (_, block) => {
         const items = block.trim().split('\n').map(l => `<li>${l.replace(/^\d+\. /, '')}</li>`).join('');
         return `\n<ol>${items}</ol>\n`;
       });
 
-      // Paragraphs: split on double newlines, wrap non-HTML blocks in <p>
       h = h
         .split(/\n{2,}/)
         .map(block => {
@@ -668,7 +488,6 @@
       const container = document.getElementById('messages');
       const div = document.createElement('div');
       div.className = `message ${role}`;
-      // Render markdown for assistant messages, plain text for user messages
       if (role === 'assistant') {
         div.innerHTML = md(content);
       } else {
@@ -682,34 +501,6 @@
     document.getElementById('msg-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') sendMessage();
     });
-
-    // ─── Panel Navigation ──────────────────────────────────────
-    function showPanel(name) {
-      document.querySelectorAll('[id^="panel-"]').forEach(el => el.style.display = 'none');
-      document.getElementById(`panel-${name}`).style.display = '';
-      document.getElementById('panel-title').textContent =
-        name.charAt(0).toUpperCase() + name.slice(1);
-
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-
-      if (name === 'status') fetchStatus();
-    }
-
-    // ─── Status Fetch ──────────────────────────────────────────
-    async function fetchStatus() {
-      try {
-        const res = await fetch('/health');
-        const data = await res.json();
-        document.getElementById('sys-uptime').textContent =
-          Math.floor(data.uptime / 1000) + 's';
-        document.getElementById('sys-memory').textContent =
-          Math.floor(data.memory.heapUsed / 1024 / 1024) + ' MB';
-      } catch {
-        document.getElementById('sys-status').textContent = 'Offline';
-        document.getElementById('sys-status').className = 'badge red';
-      }
-    }
 
     // Auto-connect
     connect();
