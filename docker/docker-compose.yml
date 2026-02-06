@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  zaakify:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: zaakify-gateway
+    restart: unless-stopped
+    ports:
+      - "18800:18800"
+    volumes:
+      - zaakify-data:/app/data
+      - ../zaakify.toml:/app/data/zaakify.toml:ro
+    environment:
+      - ZAI_API_KEY=${ZAI_API_KEY:-}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN:-}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18800/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+
+volumes:
+  zaakify-data:
+    driver: local

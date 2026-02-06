@@ -1,0 +1,8 @@
+node_modules/
+package-lock.json
+
+# Debug logs
+*.log
+
+# Config contains user preferences — included as template
+# but real credentials should never be committed

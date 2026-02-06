@@ -1,0 +1,23 @@
+{
+  "name": "email-gmail",
+  "version": "1.0.0",
+  "displayName": "Gmail Integration",
+  "description": "Gmail integration for reading, sending, and managing emails via Gmail API",
+  "author": "Zaakify",
+  "category": "communication",
+  "keywords": ["email", "gmail", "mail", "communication", "oauth"],
+  "capabilities": [
+    "List emails from inbox and labels",
+    "Read full email messages with attachment metadata",
+    "Download email attachments to disk",
+    "Send new emails with CC/BCC",
+    "Reply to email threads",
+    "Search emails with Gmail query syntax",
+    "Move and organize with labels",
+    "Delete or trash messages",
+    "Mark emails as read/unread or starred"
+  ],
+  "requiresConfiguration": true,
+  "configurationGuide": "Two-step OAuth setup: (1) Call gmail-setup-start with Google Cloud credentials, (2) User authorizes in browser, (3) Call gmail-setup-check to complete setup. Both tools must be called!",
+  "minimumZaakifyVersion": "1.0.0"
+}

@@ -1,0 +1,12 @@
+{
+  "configured": true,
+  "headless": true,
+  "locale": "en-US",
+  "timezoneId": "Europe/Amsterdam",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "dismissCookies": true,
+  "smartWaitTimeout": 10000
+}

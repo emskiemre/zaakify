@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.cache/
+data/
+*.db
+*.db-journal
+*.db-wal
+.env
+bitqlon.toml
+*.log
+.DS_Store
+coverage/
+.vite/
+nul

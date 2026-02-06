@@ -1,0 +1,77 @@
+{
+  "name": "zaakify",
+  "version": "1.0.0",
+  "description": "Nederlandse Backoffice Co-Pilot voor Ondernemers - AI-gestuurde administratieve assistent",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "bin": {
+    "zaakify": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node -e \"require('fs').copyFileSync('src/extensions/extension-runner.js','dist/extensions/extension-runner.js')\" && node -e \"require('fs').cpSync('src/workspace/boot_templates','dist/workspace/boot_templates',{recursive:true})\" && node -e \"const{cpSync,mkdirSync}=require('fs'),{join}=require('path'),dest=join(require('os').homedir(),'.zaakify','extensions');mkdirSync(dest,{recursive:true});cpSync('extensions',dest,{recursive:true})\"",
+    "dev": "tsx watch src/cli/index.ts",
+    "onboard": "node dist/cli/index.js onboard",
+    "start": "node dist/cli/index.js gateway",
+    "test": "vitest run --config tests/vitest.config.ts",
+    "test:watch": "vitest --config tests/vitest.config.ts",
+    "test:e2e": "vitest run --config tests/vitest.e2e.config.ts",
+    "test:coverage": "vitest run --config tests/vitest.config.ts --coverage",
+    "lint": "oxlint src/",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "ui:dev": "cd ui && vite dev",
+    "ui:build": "cd ui && vite build",
+    "docker:build": "docker build -t zaakify:local -f docker/Dockerfile .",
+    "docker:up": "docker compose -f docker/docker-compose.yml up",
+    "clean": "rm -rf dist .cache"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.9",
+    "@whiskeysockets/baileys": "^6.7.16",
+    "better-sqlite3": "^11.8.1",
+    "commander": "^13.1.0",
+    "croner": "^10.0.1",
+    "discord.js": "^14.18.0",
+    "grammy": "^1.35.0",
+    "hono": "^4.7.6",
+    "nanoid": "^5.1.3",
+    "openai": "^4.86.2",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
+    "sharp": "^0.34.1",
+    "smol-toml": "^1.3.1",
+    "ws": "^8.18.1",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.14.0",
+    "@types/ws": "^8.18.0",
+    "@vitest/coverage-v8": "^3.1.1",
+    "oxlint": "^0.16.6",
+    "prettier": "^3.5.3",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.1",
+    "vitest": "^3.1.1"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emskiemre/zaakify"
+  },
+  "keywords": [
+    "ai",
+    "backoffice",
+    "co-pilot",
+    "nederlands",
+    "ondernemers",
+    "administratie",
+    "facturen",
+    "email",
+    "local-first",
+    "self-hosted"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "browser",
+  "version": "1.0.0",
+  "displayName": "Browser Automation",
+  "description": "Headless browser for web automation, scraping, and interaction",
+  "author": "Zaakify",
+  "category": "automation",
+  "keywords": ["browser", "web", "automation", "scraping", "playwright"],
+  "capabilities": [
+    "Open and navigate web pages",
+    "Read page content with accessibility tree",
+    "Click buttons and links",
+    "Fill forms and type text",
+    "Execute JavaScript in pages",
+    "Manage multiple tabs",
+    "Handle SPAs and lazy-loaded content",
+    "Bypass bot detection (stealth mode)"
+  ],
+  "requiresConfiguration": false,
+  "configurationGuide": "Optional: Edit config.json to adjust viewport, locale, timezone, or disable cookie dismissal",
+  "minimumZaakifyVersion": "1.0.0"
+}

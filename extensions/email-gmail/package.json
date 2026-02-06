@@ -1,0 +1,10 @@
+{
+  "name": "zaakify-ext-email-gmail",
+  "version": "1.0.0",
+  "description": "Gmail integration extension for Zaakify",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "googleapis": "^134.0.0"
+  }
+}

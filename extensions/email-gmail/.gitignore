@@ -1,0 +1,11 @@
+# Dependencies (not shipped with source, agent installs them)
+node_modules/
+
+# Lock files
+package-lock.json
+npm-debug.log*
+yarn.lock
+
+# Note: config.json IS included in source code as a template
+# Users should never commit their actual credentials
+# BitQlon loads config from ~/.bitqlon/extensions/email-gmail/config.json

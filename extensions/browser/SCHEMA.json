@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["configured"],
+  "properties": {
+    "configured": {
+      "type": "boolean",
+      "description": "Whether the extension is ready to use"
+    },
+    "headless": {
+      "type": "boolean",
+      "description": "Run browser in headless mode",
+      "default": true
+    },
+    "locale": {
+      "type": "string",
+      "description": "Browser locale (e.g. en-US)",
+      "default": "en-US"
+    },
+    "timezoneId": {
+      "type": "string",
+      "description": "Browser timezone (e.g. Europe/Amsterdam)",
+      "default": "Europe/Amsterdam"
+    },
+    "viewport": {
+      "type": "object",
+      "properties": {
+        "width": { "type": "integer", "default": 1280 },
+        "height": { "type": "integer", "default": 720 }
+      }
+    },
+    "dismissCookies": {
+      "type": "boolean",
+      "description": "Auto-dismiss cookie consent banners",
+      "default": true
+    },
+    "smartWaitTimeout": {
+      "type": "integer",
+      "description": "Default timeout (ms) for smart page wait",
+      "default": 10000
+    }
+  }
+}

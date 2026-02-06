@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["configured", "clientId", "clientSecret", "redirectUri", "refreshToken"],
+  "properties": {
+    "configured": {
+      "type": "boolean",
+      "description": "Set to true once OAuth credentials are configured"
+    },
+    "clientId": {
+      "type": "string",
+      "description": "Google Cloud OAuth 2.0 Client ID"
+    },
+    "clientSecret": {
+      "type": "string",
+      "description": "Google Cloud OAuth 2.0 Client Secret"
+    },
+    "redirectUri": {
+      "type": "string",
+      "description": "OAuth redirect URI (must match Google Cloud Console)"
+    },
+    "refreshToken": {
+      "type": "string",
+      "description": "OAuth refresh token obtained from authorization flow"
+    },
+    "accounts": {
+      "type": "array",
+      "description": "Gmail accounts to manage",
+      "items": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Gmail address"
+          },
+          "label": {
+            "type": "string",
+            "description": "Optional label for this account"
+          }
+        }
+      }
+    }
+  }
+}
